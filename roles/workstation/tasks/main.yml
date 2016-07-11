@@ -1,0 +1,24 @@
+---
+
+- name: "install irssi"
+  apt: name={{ item }} state=present
+  with_items:
+  - irssi
+  - nmap
+  - vim
+  - links 
+
+- name: "setup users"
+  user: name={{ user_name }}
+
+- name: "add users keys"
+  authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
+
+- name: "install .vimrc"
+  copy: src=vimrc dest=/home/{{ user_name }}/.vimrc owner={{ user_name }} group={{ user_name }} mode="u=rw,g=r,o=r"
+
+- name: "install secondary bashrc"
+  copy: src=bashrc dest /home/{{ user_name }}/.bashrc-{{ user_name }}
+
+- name: "link secondary bashrc to the main"
+  lineinfile: line="[[ -r ~/.bashrc-{{ user_name }} ]] && source ~/.bashrc-{{ user_name }}" insertafter=EOF

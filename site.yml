@@ -1,0 +1,15 @@
+---
+- name: "Build an ubuntu instance ec2"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - ec2
+
+- name: "provision sites"
+  hosts: irc_client 
+  remote_user: ubuntu
+  sudo: yes
+  gather_facts: true
+  roles:
+    - workstation
