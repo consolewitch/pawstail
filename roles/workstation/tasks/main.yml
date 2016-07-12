@@ -7,6 +7,7 @@
   - nmap
   - vim
   - links 
+  - terminator
 
 - name: "setup users"
   user: name={{ user_name }}
@@ -15,10 +16,26 @@
   authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
 
 - name: "install .vimrc"
+  become: false
   copy: src=vimrc dest=/home/{{ user_name }}/.vimrc owner={{ user_name }} group={{ user_name }} mode="u=rw,g=r,o=r"
 
 - name: "install secondary bashrc"
-  copy: src=bashrc dest /home/{{ user_name }}/.bashrc-{{ user_name }}
+  become: false
+  copy: src=bashrc dest=/home/{{ user_name }}/.bashrc-{{ user_name }}
 
 - name: "link secondary bashrc to the main"
-  lineinfile: line="[[ -r ~/.bashrc-{{ user_name }} ]] && source ~/.bashrc-{{ user_name }}" insertafter=EOF
+  become: false
+  lineinfile: line="[[ -r ~/.bashrc-{{ user_name }} ]] && source ~/.bashrc-{{ user_name }}" insertafter=EOF dest=/home/{{ user_name }}/.bashrc
+
+- name: "create directories for vim temp files"
+  become: false
+  file: dest={{ item }} state=directory
+  with_items: 
+  - /home/{{ user_name }}/.vim/backup
+  - /home/{{ user_name }}/.vim/swap
+
+- name: "Create working directory"
+  file: dest={{ item }} state=directory
+  become: false
+  with_items:
+  - /home/{{ user_name }}/workspace
