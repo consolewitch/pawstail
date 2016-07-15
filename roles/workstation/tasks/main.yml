@@ -8,9 +8,12 @@
   - vim
   - links 
   - terminator
+#  - vivaldi
+#  - lastpass
+#  - docker
 
 - name: "setup users"
-  user: name={{ user_name }}
+  user: name={{ user_name }} generate_ssh_key=true ssh_key_passphrase={{ ssh_key_password }}
 
 - name: "add users keys"
   authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
