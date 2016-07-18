@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   roles:
-    - ec2
+  - ec2
 
 - name: "provision sites"
   hosts: irc_client 
@@ -12,12 +12,12 @@
   sudo: yes
   gather_facts: true
   roles:
-    - workstation
+  - workstation
 
 - name: "local workstation"
   hosts: workstation
-  connection: local
+#  connection: local
   become: true
   gather_facts: false
   roles:
-    - workstation
+  - workstation
