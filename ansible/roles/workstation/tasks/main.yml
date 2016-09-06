@@ -1,7 +1,7 @@
 ---
 
-- name: "install irssi"
-  apt: name={{ item }} state=present
+- name: "install tools"
+  apt: name={{ item }} state=present update_cache=true
   with_items:
   - irssi
   - nmap
@@ -10,15 +10,22 @@
   - terminator
   - screen
   - tmux
+  - jq
 #  - vivaldi
-#  - lastpass
-#  - docker
+
+
+- name: "install tools that require gui"
+  apt: name={{ item }} state=present update_cache=true
+  with_items:
+  - inkscape
+  tags:
+  - gui
+
 
 - name: "setup admin users"
   user: name={{ user_name }} generate_ssh_key=true ssh_key_passphrase={{ ssh_key_password }} shell=/bin/bash groups="{{ item }}" password="{{ initial_linux_user_password }}"
   with_items:
   - sudo
-  - admin
 
 - name: "add users keys"
   authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
@@ -42,6 +49,9 @@
   file: dest={{ item }} state=directory
   with_items:
   - /home/{{ user_name }}/workspace
+
+- name: "install docker from the docker git repo"
+  include: docker.yml
 
 - name: "install chrome"
   include: chrome.yml

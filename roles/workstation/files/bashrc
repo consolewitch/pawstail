@@ -1,8 +1,0 @@
-export PATH="$(brew --prefix coreutils)/libexec/gnubin:/usr/local/bin:$PATH"
-
-# Set the AWS key environment variables if they exist
-if [ -f ~/.ssh/aws_credentials.json ]
-then
-    export AWS_ACCESS_KEY_ID=$(cat ~/.ssh/aws_credentials.json |jq -r .Access_Key_Id)
-    export AWS_SECRET_ACCESS_KEY=$(cat ~/.ssh/aws_credentials.json |jq -r .Secret_Access_Key)
-fi

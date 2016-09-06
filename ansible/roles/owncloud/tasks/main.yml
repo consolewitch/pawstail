@@ -1,0 +1,8 @@
+---
+- name: "Ensure the existance of necessary tools"
+  apt: name={{ item }} state=present update_cache=true
+  with_items:
+  - wget
+
+- name: "Add repository for owncloud"
+  apt_repository:

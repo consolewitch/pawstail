@@ -1,0 +1,16 @@
+---
+- name: "Provision an ubuntu instance as an IRC client"
+  hosts: all
+  remote_user: ubuntu
+  sudo: yes
+  gather_facts: true
+  roles:
+  - workstation
+
+- name: "local workstation"
+  hosts: workstation
+  connection: local
+  become: true
+  gather_facts: true
+  roles:
+  - workstation
