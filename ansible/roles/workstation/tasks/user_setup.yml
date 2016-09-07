@@ -1,0 +1,28 @@
+---
+- name: "create the user, generate ssh keys and assign permissions"
+  user: name={{ user_name }} generate_ssh_key=true ssh_key_passphrase={{ ssh_key_password }} shell=/bin/bash groups="{{ item }}" password="{{ initial_linux_user_password }}"
+  with_items:
+  - sudo
+
+- name: "Add known-good key to autorized_keys file to allow remote login"
+  authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
+
+- name: "install secondary bashrc"
+  copy: src=bashrc dest=/home/{{ user_name }}/.bashrc-{{ user_name }}
+
+- name: "link secondary bashrc to the main"
+  lineinfile: line="[[ -r ~/.bashrc-{{ user_name }} ]] && source ~/.bashrc-{{ user_name }}" insertafter=EOF dest=/home/{{ user_name }}/.bashrc
+
+- name: "install the user's .vimrc"
+  copy: src=vimrc dest=/home/{{ user_name }}/.vimrc owner={{ user_name }} group={{ user_name }} mode="u=rw,g=r,o=r"
+
+- name: "create directories for vim temp files"
+  file: dest={{ item }} state=directory
+  with_items: 
+  - /home/{{ user_name }}/.vim/backup
+  - /home/{{ user_name }}/.vim/swap
+
+- name: "Create working directory"
+  file: dest={{ item }} state=directory
+  with_items:
+  - /home/{{ user_name }}/workspace

@@ -1,5 +1,7 @@
 ---
 
+- include_vars: vault.yml
+
 - name: "install tools"
   apt: name={{ item }} state=present update_cache=true
   with_items:
@@ -11,6 +13,7 @@
   - screen
   - tmux
   - jq
+  - dhcpdump
 #  - vivaldi
 
 
@@ -21,37 +24,13 @@
   tags:
   - gui
 
-
-- name: "setup admin users"
-  user: name={{ user_name }} generate_ssh_key=true ssh_key_passphrase={{ ssh_key_password }} shell=/bin/bash groups="{{ item }}" password="{{ initial_linux_user_password }}"
-  with_items:
-  - sudo
-
-- name: "add users keys"
-  authorized_key: exclusive=yes key=https://github.com/{{ github_user }}.keys user={{ user_name }}
-
-- name: "install .vimrc"
-  copy: src=vimrc dest=/home/{{ user_name }}/.vimrc owner={{ user_name }} group={{ user_name }} mode="u=rw,g=r,o=r"
-
-- name: "install secondary bashrc"
-  copy: src=bashrc dest=/home/{{ user_name }}/.bashrc-{{ user_name }}
-
-- name: "link secondary bashrc to the main"
-  lineinfile: line="[[ -r ~/.bashrc-{{ user_name }} ]] && source ~/.bashrc-{{ user_name }}" insertafter=EOF dest=/home/{{ user_name }}/.bashrc
-
-- name: "create directories for vim temp files"
-  file: dest={{ item }} state=directory
-  with_items: 
-  - /home/{{ user_name }}/.vim/backup
-  - /home/{{ user_name }}/.vim/swap
-
-- name: "Create working directory"
-  file: dest={{ item }} state=directory
-  with_items:
-  - /home/{{ user_name }}/workspace
+- name: "Setup User account"
+  include: user_setup.yml
 
 - name: "install docker from the docker git repo"
   include: docker.yml
+  tags:
+  - bare_metal
 
 - name: "install chrome"
   include: chrome.yml
