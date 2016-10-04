@@ -6,16 +6,28 @@ set listchars=eol:$,tab:>-,trail:~,extends:>,precedes:<
 
 " Deal with word wrapping
 set linebreak
-set showbreak=+++
+set showbreak=>
 set textwidth=0
 set wrapmargin=0
 
 " Set tab to 4 true spaces
-:set tabstop=4
-:set shiftwidth=4
-:set expandtab
+set tabstop=4
+set shiftwidth=4
+set expandtab
 
 " General
+:syntax on
+
+" Set colors
+set background=light
+
+hi CursorLine   cterm=NONE ctermbg=gray ctermfg=black guibg=gray guifg=black
+hi CursorColumn cterm=NONE ctermbg=gray ctermfg=black guibg=gray guifg=black
+
+" get rid of LogiPat because it conflicts with explore
+let g:loaded_logipat = 1
+
+" set showcommand
 set showmatch
 set hlsearch
 set smartcase
