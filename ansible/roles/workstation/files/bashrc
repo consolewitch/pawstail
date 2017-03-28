@@ -1,1 +1,2 @@
 export PS1="[\[\e[32m\]\u\[\e[m\]@\[\e[32m\]\h\[\e[m\]] [\w]\n\[\e[35m\]\t\[\e[m\]\\$ "
+alias jqc="jq . -C|less -R"
